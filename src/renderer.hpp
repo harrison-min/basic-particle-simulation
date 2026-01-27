@@ -7,9 +7,9 @@
 class Renderer {
 
     public:
-        Renderer();
+        Renderer(int width, int height, int scale);
         void drawFrame();
-        void setPixel(int width, int height, uint32_t color);
+        void setPixel(int x, int y, uint32_t color);
         void deletePixel(int x, int y);
 
     private:
@@ -19,7 +19,7 @@ class Renderer {
         int widthRatio;  
         int heightRatio;
         int videoScale; 
-        std::vector<std::vector<uint32_t>> pixelMap;
+        std::vector<uint32_t> pixelMap;
         void resetPixelMap();
 
 };

@@ -1,25 +1,25 @@
 #include "renderer.hpp"
 #include <fstream>
 #include <format>
-Renderer::Renderer() {
+#include <algorithm>
+
+Renderer::Renderer(int width, int height, int scale) {
     fileName = "test";
     frameDirectory = "frames/";
     frameNumber = 0;
-    widthRatio = 16;
-    heightRatio = 9;
-    videoScale = 100;
-    pixelMap.resize(widthRatio * videoScale);
-    for (size_t i = 0; i < pixelMap.size(); i ++) {
-        pixelMap[i].resize(heightRatio * videoScale);
-    }
+    widthRatio = width;
+    heightRatio = height;
+    videoScale = scale;
+    pixelMap.resize(widthRatio * heightRatio * videoScale * videoScale);
+    
 }
 
-void Renderer::setPixel(int width, int height, uint32_t color) {
-    if (width >= widthRatio * videoScale || height >= heightRatio * videoScale ||
-        width < 0 || height < 0) {
+void Renderer::setPixel(int x, int y, uint32_t color) {
+    if (x >= widthRatio * videoScale || y >= heightRatio * videoScale ||
+        x < 0 || y < 0) {
         return;
     }
-    pixelMap [width] [height] = color;
+    pixelMap [x + (videoScale * heightRatio * y)] = color;
 }
 
 void Renderer::deletePixel (int x, int y) {
@@ -28,16 +28,11 @@ void Renderer::deletePixel (int x, int y) {
         return;
     }
 
-
-    pixelMap [x] [y] = 0;
+    pixelMap [x + (heightRatio * videoScale * y)] = 0;
 }
 
 void Renderer::resetPixelMap () {
-    for (size_t i = 0; i < widthRatio * videoScale; ++ i) {
-        for (size_t j = 0; j < heightRatio * videoScale; ++j) {
-            pixelMap [i] [j] = 0;
-        }
-    }
+    std::fill(pixelMap.begin(), pixelMap.end(), 0);    
 }
 
 void Renderer::drawFrame () {
@@ -60,8 +55,8 @@ void Renderer::drawFrame () {
 
     for (int y = 0; y < height; ++ y) {
         for (int x = 0; x < width; ++ x) {
-            if (pixelMap [x] [y]) {
-                uint32_t colorData = pixelMap[x] [y];
+            if (pixelMap [x + height * y]) {
+                uint32_t colorData = pixelMap[x + height * y];
                 uint8_t red = (colorData >> 16) & 0xFF;
                 uint8_t green = (colorData >> 8) & 0xFF;
                 uint8_t blue =  (colorData) & 0xFF;

@@ -3,7 +3,7 @@
 #include <iostream>
 
 int main () {
-    Renderer myRender;
+    Renderer myRender(16, 9, 100);
     Simulation mySim (myRender);
 
     for (size_t i = 0; i < 50; ++ i) {
