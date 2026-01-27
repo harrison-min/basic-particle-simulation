@@ -19,7 +19,7 @@ void Renderer::setPixel(int x, int y, uint32_t color) {
         x < 0 || y < 0) {
         return;
     }
-    pixelMap [x + (videoScale * heightRatio * y)] = color;
+    pixelMap [x + (videoScale * widthRatio * y)] = color;
 }
 
 void Renderer::deletePixel (int x, int y) {
@@ -28,7 +28,7 @@ void Renderer::deletePixel (int x, int y) {
         return;
     }
 
-    pixelMap [x + (heightRatio * videoScale * y)] = 0;
+    pixelMap [x + (widthRatio * videoScale * y)] = 0;
 }
 
 void Renderer::resetPixelMap () {
@@ -55,8 +55,8 @@ void Renderer::drawFrame () {
 
     for (int y = 0; y < height; ++ y) {
         for (int x = 0; x < width; ++ x) {
-            if (pixelMap [x + height * y]) {
-                uint32_t colorData = pixelMap[x + height * y];
+            if (pixelMap [x + width * y]) {
+                uint32_t colorData = pixelMap[x + width * y];
                 uint8_t red = (colorData >> 16) & 0xFF;
                 uint8_t green = (colorData >> 8) & 0xFF;
                 uint8_t blue =  (colorData) & 0xFF;
