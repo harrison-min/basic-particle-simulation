@@ -1,7 +1,8 @@
 #include "renderer.hpp"
 #include <fstream>
-#include <format>
 #include <algorithm>
+#include <sstream>
+#include <iomanip>
 
 Renderer::Renderer(int width, int height, int scale) {
     fileName = "test";
@@ -38,13 +39,11 @@ void Renderer::resetPixelMap () {
 void Renderer::drawFrame () {
     std::fstream file;
 
-    
-    std::string fullPath = std::format (
-        "{}{}{:05}.ppm",
-        frameDirectory,
-        fileName, 
-        frameNumber
-    );
+    //using ostringstream due to std::format not being implemented by nvcc
+    std::ostringstream oss;
+    oss << frameDirectory << fileName << std::setw(5) << std::setfill('0') << frameNumber << ".ppm";
+
+    std::string fullPath = oss.str();
 
     file.open(fullPath , std::ios::out | std::ios::binary);
     

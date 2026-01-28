@@ -2,18 +2,19 @@
 #include <chrono>
 #include <iostream>
 #include <cmath>
-
 int main () {
     int widthRatio = 16;
     int heightRatio = 9;
-    int videoScale = 50;
+    int videoScale = 100;
 
     Renderer myRender(widthRatio, heightRatio, videoScale);
     GravityField myGravity(widthRatio * videoScale, heightRatio * videoScale);
+    myGravity.testGPU();
 
     Simulation mySim (myRender, myGravity);
 
-    myGravity.addGravityWell(100, 200, pow(10, 15) );
+    myGravity.addGravityWell(800, 450, pow(10, 15) );
+    myGravity.addGravityWell(1000, 600, pow(10, 15) );
     for (int i = 0; i < videoScale; i ++) {
         for (int j = 0; j < videoScale; j ++) {
             mySim.addParticle(i*widthRatio, j * heightRatio, rand()%2-1, rand()%2-1);

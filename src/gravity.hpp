@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 
-
 class GravityWell {
     public:
         int positionX;
@@ -16,6 +15,7 @@ class GravityField {
         GravityField(int width, int height);
         void addGravityWell(int x, int y, float mass); 
         void computeVectorField();
+        void testGPU();
         std::vector<float> accelerationFieldXcomponent; 
         std::vector<float> accelerationFieldYcomponent;    
         int totalWidth;
