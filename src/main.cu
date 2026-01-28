@@ -2,6 +2,7 @@
 #include <chrono>
 #include <iostream>
 #include <cmath>
+
 int main () {
     int widthRatio = 16;
     int heightRatio = 9;
@@ -9,21 +10,20 @@ int main () {
 
     Renderer myRender(widthRatio, heightRatio, videoScale);
     GravityField myGravity(widthRatio * videoScale, heightRatio * videoScale);
-    myGravity.testGPU();
 
     Simulation mySim (myRender, myGravity);
 
-    myGravity.addGravityWell(800, 450, pow(10, 15) );
-    myGravity.addGravityWell(1000, 600, pow(10, 15) );
-    for (int i = 0; i < videoScale; i ++) {
-        for (int j = 0; j < videoScale; j ++) {
-            mySim.addParticle(i*widthRatio, j * heightRatio, rand()%2-1, rand()%2-1);
+    myGravity.addGravityWell(200, 200, pow(10, 15) );
+    myGravity.addGravityWell(1000, 450, pow(10, 15) );
+    for (int i = 5; i < videoScale*3-5; i ++) {
+        for (int j = 5; j < videoScale*3-5; j ++) {
+            mySim.addParticle(i*widthRatio/3, j * heightRatio/3, .05f *(rand()%20-10), .05f *(rand()%20-10));
         }
     }
 
 
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-    mySim.runSimulation(.1, 500);
+    mySim.runSimulation(.1, 5000);
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
     std::cerr << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;

@@ -11,6 +11,7 @@ class Renderer {
         void drawFrame();
         void setPixel(int x, int y, uint32_t color);
         void deletePixel(int x, int y);
+        void resetPixelMap();
 
     private:
         size_t frameNumber;
@@ -20,7 +21,6 @@ class Renderer {
         int heightRatio;
         int videoScale; 
         std::vector<uint32_t> pixelMap;
-        void resetPixelMap();
 
 };
 
