@@ -9,6 +9,7 @@ class Particle {
         Particle (float posX, float posY, float velX, float velY, float startingMass);
         float velocityX;
         float velocityY;
+        uint32_t color;
     private:
         float mass;
 };
@@ -43,5 +44,16 @@ struct ParticleVelocityUpdater {
         int gridIndex = gridX + gridY * totalWidth;
         particles[index].velocityX = accelX[gridIndex] * timeInterval + particles[index].velocityX;
         particles[index].velocityY = accelY[gridIndex] * timeInterval + particles[index].velocityY;
+        
+        float absoluteVelocitySquared = (particles[index].velocityX * particles[index].velocityX) +
+            (particles[index].velocityY * particles[index].velocityY);
+        float normalizedVelocity = -500 /(absoluteVelocitySquared + 500) + 1;
+        uint8_t red = static_cast<uint8_t> (normalizedVelocity * normalizedVelocity* normalizedVelocity * 255);
+        uint8_t green = static_cast<uint8_t> ((-8 * (normalizedVelocity-.5) * (normalizedVelocity-.5) + 1)  * 255);
+        uint8_t blue = static_cast<uint8_t> (1/( 8* normalizedVelocity + 1) * 200 + 55);
+
+        particles[index].color = (0xFF << 24) | (red << 16) | (green << 8) | blue;
+
+
     }
 };

@@ -33,7 +33,7 @@ void Simulation::updateParticles(float timeInterval) {
     
     thrust::host_vector<Particle> temp = particles;
     for (Particle par: temp) {
-        renderer.setPixel(static_cast<int>(par.positionX), static_cast<int>(par.positionY), 0xFFFFFFFF);
+        renderer.setPixel(static_cast<int>(par.positionX), static_cast<int>(par.positionY), par.color);
     }
 }
 void Simulation::addParticle (float posX, float posY, float velX, float velY) {

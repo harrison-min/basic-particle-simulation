@@ -38,7 +38,7 @@ struct GravityVectorFieldFunctor  {
         int y = index / width;
         float xComponent = 0;
         float yComponent = 0;
-        float minimumDistance = 10.0f;
+        float minimumDistance = 1.0f;
 
         for (int i = 0; i < numberOfWells; ++ i) {
             float horizontalDistance = gravWells[i].positionX - x;

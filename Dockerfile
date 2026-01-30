@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
 COPY src/ /src/
 
-RUN nvcc src/main.cu src/renderer.cu src/particle.cu src/simulation.cu src/gravity.cu  -std=c++20 --extended-lambda -arch=sm_75 -o main
+RUN nvcc src/main.cu src/renderer.cu src/particle.cu src/simulation.cu src/gravity.cu  -std=c++20 --extended-lambda -arch=sm_89 -o main
 
 RUN mkdir frames output
 
