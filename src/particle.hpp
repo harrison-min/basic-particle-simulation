@@ -4,11 +4,13 @@
 
 class Particle {
     public:
+        Particle (float posX, float posY, float posZ, float velX, float velY, float velZ, float startingMass);
         float positionX;
         float positionY;
-        Particle (float posX, float posY, float velX, float velY, float startingMass);
+        float positionZ;
         float velocityX;
         float velocityY;
+        float velocityZ;
         uint32_t color;
     private:
         float mass;
@@ -22,31 +24,50 @@ struct ParticlePositionUpdater {
     __device__ void operator() (int index) {
         particles[index].positionX = particles[index].velocityX * timeInterval + particles[index].positionX;
         particles[index].positionY = particles[index].velocityY * timeInterval + particles[index].positionY;
+        particles[index].positionZ = particles[index].velocityZ * timeInterval + particles[index].positionZ;
     }
 };
 
 struct ParticleVelocityUpdater {
     float timeInterval;
     Particle * particles;
-    float * accelX;
-    float * accelY;
+    GravityWell * wells;
     int totalWidth;
     int totalHeight;
+    int totalDepth;
+    size_t numberOfWells;
 
     __device__ void operator() (int index) {
-        int gridX = static_cast<int>(particles[index].positionX);
-        int gridY = static_cast<int>(particles[index].positionY);
+        Particle& currentParticle = particles[index];
 
-        if (gridX < 0 || gridY < 0 || gridX > totalWidth || gridY > totalHeight) {
-            return;
+        float accelX = 0;
+        float accelY = 0;
+        float accelZ = 0;
+
+        for (size_t i = 0; i < numberOfWells; i ++) {
+            float xDistance = wells[i].positionX - currentParticle.positionX;
+            float yDistance = wells[i].positionY - currentParticle.positionY;
+            float zDistance = wells[i].positionZ - currentParticle.positionZ;
+
+            float minimumDistance = 1.0f;
+            float distanceSquared = xDistance * xDistance + yDistance * yDistance + zDistance * zDistance + minimumDistance;
+            float inverseDistance = rsqrtf(distanceSquared);
+
+            float G = 6.67e-11f;
+            float gravitationalAccelerationScalar = G * wells[i].mass / (distanceSquared);
+
+            accelX += gravitationalAccelerationScalar * xDistance * inverseDistance;
+            accelY += gravitationalAccelerationScalar * yDistance * inverseDistance;
+            accelZ += gravitationalAccelerationScalar * zDistance * inverseDistance;
         }
 
-        int gridIndex = gridX + gridY * totalWidth;
-        particles[index].velocityX = accelX[gridIndex] * timeInterval + particles[index].velocityX;
-        particles[index].velocityY = accelY[gridIndex] * timeInterval + particles[index].velocityY;
-        
+        currentParticle.velocityX = currentParticle.velocityX + accelX * timeInterval;
+        currentParticle.velocityY = currentParticle.velocityY + accelY * timeInterval;
+        currentParticle.velocityZ = currentParticle.velocityZ + accelZ * timeInterval;
+
+
         float absoluteVelocitySquared = (particles[index].velocityX * particles[index].velocityX) +
-            (particles[index].velocityY * particles[index].velocityY);
+            (particles[index].velocityY * particles[index].velocityY) + (particles[index].velocityZ * particles[index].velocityZ);
         float normalizedVelocity = -500 /(absoluteVelocitySquared + 500) + 1;
         uint8_t red = static_cast<uint8_t> (normalizedVelocity * normalizedVelocity* normalizedVelocity * 255);
         uint8_t green = static_cast<uint8_t> ((-8 * (normalizedVelocity-.5) * (normalizedVelocity-.5) + 1)  * 255);

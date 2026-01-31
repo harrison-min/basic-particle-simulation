@@ -8,7 +8,7 @@
 class Simulation {
     public:
         Simulation(Renderer& newRend, GravityField& newGrav);
-        void addParticle (float posX, float posY, float velX, float velY);
+        void setParticles(const std::vector<Particle> & cpuParticles);
         void runSimulation(float timeInterval, int intervals);  
         thrust::device_vector<Particle> particles;
 
