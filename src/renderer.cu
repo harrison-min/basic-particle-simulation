@@ -56,9 +56,11 @@ void Renderer::drawFrame () {
         for (int x = 0; x < width; ++ x) {
             if (pixelMap [x + width * y]) {
                 uint32_t colorData = pixelMap[x + width * y];
-                uint8_t red = (colorData >> 16) & 0xFF;
-                uint8_t green = (colorData >> 8) & 0xFF;
-                uint8_t blue =  (colorData) & 0xFF;
+                uint8_t intensity = (colorData>>24) & 0xFF;
+
+                uint8_t red = static_cast<uint8_t>(static_cast<int>((colorData >> 16) & 0xFF) * intensity/255);
+                uint8_t green = static_cast<uint8_t>(static_cast<int>((colorData >> 8) & 0xFF) * intensity/255);
+                uint8_t blue = static_cast<uint8_t>(static_cast<int>(colorData & 0xFF) * intensity/255);
 
                 file.put(red);
                 file.put(green);

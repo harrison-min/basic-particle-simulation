@@ -15,12 +15,12 @@ int main () {
     Simulation mySim (myRender, myGravity);
     for (int i = 0; i < 20; i ++) {
         myGravity.addGravityWell(rand()%(widthRatio * videoScale), rand()%(heightRatio * videoScale), 
-            rand()%(depthRatio * videoScale), pow(10, 15));
+            rand()%(depthRatio * videoScale), pow(10, 14));
     }
     std::vector<Particle> myParticles;
     for (int i = 0; i < videoScale*3; i ++) {
         for (int j = 0; j < videoScale*3; j ++) {
-            myParticles.emplace_back(i * widthRatio/3, j * heightRatio/3, 1, 0, 0, 0, 1);
+            myParticles.emplace_back(i * widthRatio/3, j * heightRatio/3, rand()%(depthRatio * videoScale), 0, 0, 0, 1);
         }
     }
 

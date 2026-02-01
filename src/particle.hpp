@@ -66,14 +66,19 @@ struct ParticleVelocityUpdater {
         currentParticle.velocityZ = currentParticle.velocityZ + accelZ * timeInterval;
 
 
-        float absoluteVelocitySquared = (particles[index].velocityX * particles[index].velocityX) +
-            (particles[index].velocityY * particles[index].velocityY) + (particles[index].velocityZ * particles[index].velocityZ);
-        float normalizedVelocity = -500 /(absoluteVelocitySquared + 500) + 1;
+        float absoluteVelocitySquared = 
+            (particles[index].velocityZ * particles[index].velocityZ);
+        float normalizedVelocity = -10 /(absoluteVelocitySquared + 10) + 1;
         uint8_t red = static_cast<uint8_t> (normalizedVelocity * normalizedVelocity* normalizedVelocity * 255);
         uint8_t green = static_cast<uint8_t> ((-8 * (normalizedVelocity-.5) * (normalizedVelocity-.5) + 1)  * 255);
         uint8_t blue = static_cast<uint8_t> (1/( 8* normalizedVelocity + 1) * 200 + 55);
-
-        particles[index].color = (0xFF << 24) | (red << 16) | (green << 8) | blue;
+        uint8_t intensity;
+        if (particles[index].positionZ < totalDepth && particles[index].positionZ >=0) {
+            intensity = static_cast<uint8_t>((totalDepth - particles[index].positionZ)/static_cast<float>(totalDepth) * 0xFF);
+        } else {
+            intensity = 0x00; 
+        }
+        particles[index].color = (intensity << 24) | (red << 16) | (green << 8) | blue;
 
 
     }
