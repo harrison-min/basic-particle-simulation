@@ -15,5 +15,10 @@ class Simulation {
     private:
         Renderer & renderer;
         void updateParticles(float timeInterval);
+        void updateVelocity(float timeInterval);
+        void updatePosition(float timeInterval);
+        void updatePixelMap();
         GravityField& gravity;
+        std::vector<uint32_t> pixelMap;
+        std::vector<float> closestZDistancePixelMap;
 };

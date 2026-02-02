@@ -20,7 +20,7 @@ int main () {
     std::vector<Particle> myParticles;
     for (int i = 0; i < videoScale*3; i ++) {
         for (int j = 0; j < videoScale*3; j ++) {
-            myParticles.emplace_back(i * widthRatio/3, j * heightRatio/3, rand()%(depthRatio * videoScale), 0, 0, 0, 1);
+            myParticles.emplace_back(i * widthRatio/3, j * heightRatio/3, rand()%(depthRatio * videoScale), rand()%4 - 2, rand()%4 - 2, rand()%4-2, rand()%5, 1);
         }
     }
 

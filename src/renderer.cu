@@ -36,6 +36,10 @@ void Renderer::resetPixelMap () {
     std::fill(pixelMap.begin(), pixelMap.end(), 0);    
 }
 
+void Renderer::setPixelMap (const std::vector<uint32_t> & newMap) {
+    pixelMap = newMap;
+}
+
 void Renderer::drawFrame () {
     std::fstream file;
 
@@ -56,7 +60,7 @@ void Renderer::drawFrame () {
         for (int x = 0; x < width; ++ x) {
             if (pixelMap [x + width * y]) {
                 uint32_t colorData = pixelMap[x + width * y];
-                uint8_t intensity = (colorData>>24) & 0xFF;
+                uint8_t intensity = static_cast<uint8_t>((colorData>>24) & 0xFF);
 
                 uint8_t red = static_cast<uint8_t>(static_cast<int>((colorData >> 16) & 0xFF) * intensity/255);
                 uint8_t green = static_cast<uint8_t>(static_cast<int>((colorData >> 8) & 0xFF) * intensity/255);

@@ -10,6 +10,7 @@ class Renderer {
         Renderer(int width, int height, int scale);
         void drawFrame();
         void setPixel(int x, int y, uint32_t color);
+        void setPixelMap(const std::vector<uint32_t>& pixelMap);
         void deletePixel(int x, int y);
         void resetPixelMap();
 
