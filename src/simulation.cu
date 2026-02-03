@@ -28,18 +28,37 @@ void Simulation::updatePixelMap () {
     std::fill(closestZDistancePixelMap.begin(), closestZDistancePixelMap.end(), std::numeric_limits<float>::max());
     std::fill(pixelMap.begin(), pixelMap.end(), 0);
     thrust::host_vector<Particle> temp = particles; 
-
+    float screenCenterX = gravity.totalWidth / 2.0f;
+    float screenCenterY = gravity.totalHeight / 2.0f;
+    float focalLength = gravity.totalDepth;
 
     for (const Particle& par : temp) {
-        int centerX = static_cast<int>(par.positionX);
-        int centerY = static_cast<int>(par.positionY);
         float currentZ = par.positionZ;
-        float radius = par.radius;
+        
+        if (currentZ <= -focalLength) continue;
 
-        for (int dy = static_cast<int>(-radius); dy <= static_cast<int>(radius); ++dy) {
-            for (int dx = static_cast<int>(-radius); dx <= static_cast<int>(radius); ++dx) {
+
+        float scale = focalLength / (focalLength + currentZ);
+
+        int centerX = static_cast<int>((par.positionX - screenCenterX) * scale + screenCenterX);
+        int centerY = static_cast<int>((par.positionY - screenCenterY) * scale + screenCenterY);
+        float radius = par.radius* scale;
+
+        if (radius > 15.0f){
+            radius = 15.0f;
+        }
+        if (radius < 0.1f){
+            radius = 0.1f;
+        }
+
+        int radiusSquared = static_cast<int> (radius * radius);
+        int negativeRadius = static_cast<int>(-radius);
+        int positiveRadius = static_cast<int>(radius);
+
+        for (int dy = negativeRadius; dy <= positiveRadius; ++dy) {
+            for (int dx = negativeRadius; dx <= positiveRadius; ++dx) {
                 
-                if (dx * dx + dy * dy > static_cast<int>(radius * radius)) {
+                if (dx * dx + dy * dy > radiusSquared) {
                     continue;
                 }
 

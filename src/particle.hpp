@@ -75,7 +75,7 @@ struct ParticleVelocityUpdater {
         uint8_t blue = static_cast<uint8_t> (1/( 8* normalizedVelocity + 1) * 200 + 55);
         uint8_t intensity;
         if (particles[index].positionZ < totalDepth && particles[index].positionZ >=0) {
-            intensity = static_cast<uint8_t>((totalDepth - particles[index].positionZ)/static_cast<float>(totalDepth) * 0xFF);
+            intensity = static_cast<uint8_t>((totalDepth - particles[index].positionZ )/static_cast<float>(totalDepth) * 0xFF);
         } else {
             intensity = 0x00; 
         }
