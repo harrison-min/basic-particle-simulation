@@ -27,12 +27,12 @@ void Simulation::updateParticles(float timeInterval) {
 void Simulation::updatePixelMap () {
     std::fill(closestZDistancePixelMap.begin(), closestZDistancePixelMap.end(), std::numeric_limits<float>::max());
     std::fill(pixelMap.begin(), pixelMap.end(), 0);
-    thrust::host_vector<Particle> temp = particles; 
+    thrust::host_vector<Particle> tempParticles = particles; 
     float screenCenterX = gravity.totalWidth / 2.0f;
     float screenCenterY = gravity.totalHeight / 2.0f;
     float focalLength = gravity.totalDepth;
 
-    for (const Particle& par : temp) {
+    for (const Particle& par : tempParticles) {
         float currentZ = par.positionZ;
         
         if (currentZ <= -focalLength) continue;
@@ -44,9 +44,7 @@ void Simulation::updatePixelMap () {
         int centerY = static_cast<int>((par.positionY - screenCenterY) * scale + screenCenterY);
         float radius = par.radius* scale;
 
-        if (radius > 15.0f){
-            radius = 15.0f;
-        }
+
         if (radius < 0.1f){
             radius = 0.1f;
         }
@@ -78,6 +76,46 @@ void Simulation::updatePixelMap () {
         }
     }
 
+    
+    thrust::host_vector<GravityWell> tempGrav = gravity.wells;
+
+    for (const GravityWell& grav : tempGrav) {
+        float currentZ = grav.positionZ;
+        
+        if (currentZ <= -focalLength) continue;
+
+        float scale = focalLength / (focalLength + currentZ);
+
+        int centerX = static_cast<int>((grav.positionX - screenCenterX) * scale + screenCenterX);
+        int centerY = static_cast<int>((grav.positionY - screenCenterY) * scale + screenCenterY);
+        float radius = 10.f* scale;
+        int radiusSquared = static_cast<int> (radius * radius);
+        int negativeRadius = static_cast<int>(-radius);
+        int positiveRadius = static_cast<int>(radius);
+
+        for (int dy = negativeRadius; dy <= positiveRadius; ++dy) {
+            for (int dx = negativeRadius; dx <= positiveRadius; ++dx) {
+                
+                if (dx * dx + dy * dy > radiusSquared) {
+                    continue;
+                }
+
+                int px = centerX - dx;
+                int py = centerY -dy;
+
+                if (px>=0 && px < gravity.totalWidth && py >= 0 && py < gravity.totalHeight) {
+                    int index = py * gravity.totalWidth + px;
+
+                    if (currentZ < closestZDistancePixelMap[index] && currentZ >= 0) {
+                        closestZDistancePixelMap[index] = currentZ;
+
+                        pixelMap[index] = 0xFFFFFFFF;
+                    }
+                }
+            }
+        }
+ 
+    }
 
     renderer.setPixelMap(pixelMap);
 }
