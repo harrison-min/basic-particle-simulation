@@ -9,7 +9,7 @@
 
 
 ## About The Project
-<video src="https://raw.githubusercontent.com/harrison-min/basic-particle-simulation/main/output/output.mp4" 
+<video src="https://raw.githubusercontent.com/harrison-min/basic-particle-simulation/main/output2DAccelerationVectorFieldApproximation.mp4" 
        width="100%" 
        height="auto" 
        muted 
