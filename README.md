@@ -1,36 +1,9 @@
-# Basic Particle Simulation
+# GPU-Accelerated Particle Simulator in C++ & CUDA
 
-## About The Project
-<video src="https://raw.githubusercontent.com/harrison-min/basic-particle-simulation/main/output2DAccelerationVectorFieldApproximation.mp4" 
-       width="100%" 
-       height="auto" 
-       muted 
-       controls 
-       loop 
-       autoplay>
-</video>
+A basic particle physics simulator built on classical mechanics and Newtonian gravity, accelerated using the CUDA Thrust library.
 
-This is a basic particle physics simulator using the CUDA API for parallelizing the simulation calculations. It is based on classical mechanics and Newtonian gravity. 
+## Features
 
-Renderer is a simple PPM image generator and individual frames are combined using FFMPEG. Thrust is the main CUDA library used. 
-
-Physics Assumptions: 
-- No particle-particle or particle-gravity well collisions.
-- Gravity wells are fixed points in space. 
-
-
-### Built With
-
-1. CUDA (thrust library)
-2. FFMPEG
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<!-- CONTACT -->
-## Contact
-
-Harrison Min - email:harrison0min@gmail.com
-Github - github.com/harrison-min/basic-particle-simulation
+* **PPM Based Rendering:** Frames are generated using the PPM image format (due to simplicity) and stitched together with FFMPEG
+* **Classical Mechanics Engine:** Models gravity wells as fixed points with no particle-particle or particle-well collisions (chosen for ease of parallelization).
+* **CUDA Acceleration:** Uses CUDA thrust library for GPU acceleration for position/velocity data. 
