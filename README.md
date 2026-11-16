@@ -1,12 +1,4 @@
-<br />
-<div align="center">
-  <p align="center">
-    Basic Particle Simulation
-  </p>
-</div>
-
-
-
+# Basic Particle Simulation
 
 ## About The Project
 <video src="https://raw.githubusercontent.com/harrison-min/basic-particle-simulation/main/output2DAccelerationVectorFieldApproximation.mp4" 
